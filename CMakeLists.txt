@@ -14,6 +14,14 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(
         SFMLMonkeyTyper main.cpp
+        menu.cpp
+        menu.hpp
+        game.cpp
+        game.hpp
+        loaders.cpp
+        loaders.hpp
+        globals.cpp
+        globals.hpp
 )
 
 target_link_libraries(SFMLMonkeyTyper
