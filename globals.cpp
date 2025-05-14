@@ -31,12 +31,15 @@ int currentFontIndex = 0;
 // Muzyka i dźwięki
 sf::Music gameMusic;
 sf::Music lobbyMusic;
+sf::Music postGameMusic;
 std::string lobbyMusicFiles = "assets/sounds/lobby_music.wav";
 std::vector<std::string> gameMusicFiles = {
     "assets/sounds/game_music1.wav",
     "assets/sounds/game_music2.wav",
     "assets/sounds/game_music3.wav"
 };
+std::string postGameMusicFiles = "assets/sounds/post_lobby.wav";
+
 int audioVolume = 5;
 
 // Efekty dźwiękowe

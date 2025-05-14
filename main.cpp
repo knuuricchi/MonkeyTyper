@@ -2,22 +2,24 @@
 #include "menu.hpp"
 #include "globals.hpp"
 #include "loaders.hpp"
-#include "game.hpp"
+#include <thread>
 
 int main() {
     // Inicjalizacja okna
     sf::RenderWindow window(sf::VideoMode{900u, 660u}, "Monkey Typer");
     window.setFramerateLimit(60);
 
-    // Ładowanie zasobów
-    loadIcon(window, "assets/images/icon.png");
     loadFont("assets/BrokenConsole.ttf");
+    loadIcon(window, "assets/images/icon.png");
     loadWordsFromFile("Words.txt");
     loadAudioEffects();
     loadMusic(lobbyMusic, lobbyMusicFiles, audioVolume);
-    lobbyMusic.play();
+    loadPostGameMuisc(postGameMusic, postGameMusicFiles, audioVolume);
 
-    srand(static_cast<unsigned int>(time(nullptr)));
+    showLoadingScreen(window, font);
+    std::this_thread::sleep_for(std::chrono::milliseconds(900));
+
+    lobbyMusic.play();
 
     // Inicjalizacja stanu menu
     MenuState currentMenu = MenuState::MAIN_MENU;

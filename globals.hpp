@@ -29,8 +29,10 @@ extern int currentFontIndex;
 // Muzyka i dźwięki
 extern sf::Music gameMusic;
 extern sf::Music lobbyMusic;
+extern sf::Music postGameMusic;
 extern std::string lobbyMusicFiles;
 extern std::vector<std::string> gameMusicFiles;
+extern std::string postGameMusicFiles;
 extern int audioVolume;
 
 // Efekty dźwiękowe

@@ -232,6 +232,9 @@ void saveScoreboard(const std::string& filename) {
 }
 
 auto showPostGameMenu(sf::RenderWindow& window) -> void {
+    lobbyMusic.stop();
+    postGameMusic.play();
+
     scoreboard.push_back({"Local", score});
 
     // Sortowanie scoreboardu malejąco (najwyższy wynik na górze)

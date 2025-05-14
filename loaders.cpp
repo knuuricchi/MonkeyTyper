@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include "globals.hpp"
+#include <thread>
 
 void loadIcon(sf::RenderWindow& window, const std::string& filename) {
     sf::Image icon;
@@ -35,7 +36,7 @@ void loadWordsFromFile(const std::string& filename) {
 void loadAudioEffects() {
     if (!menuMoveBuffer.loadFromFile("assets/sounds/menu_move.wav")) {
         std::cerr << "Nie można załadować pliku: menu_move.wav" << std::endl;
-        return; // Zakończ, jeśli plik nie został załadowany
+        return;
     }
     if (!menuSelectBuffer.loadFromFile("assets/sounds/menu_select.wav")) {
         std::cerr << "Nie można załadować pliku: menu_select.wav" << std::endl;
@@ -62,4 +63,25 @@ void loadMusic(sf::Music& music, const std::string& filename, int volume) {
     }
     music.setLoop(true);
     music.setVolume(volume * 10);
+}
+
+void loadPostGameMuisc(sf::Music& postGameMuisc, const std::string& filename, int volume) {
+    if (!postGameMuisc.openFromFile(filename)) {
+        std::cerr << "Nie można załadować pliku muzycznego: " << filename << std::endl;
+        return;
+    }
+    postGameMuisc.setLoop(true);
+    postGameMuisc.setVolume(volume * 10);
+}
+
+void showLoadingScreen(sf::RenderWindow& window, const sf::Font& font) {
+    window.clear(sf::Color(0, 0, 0));
+    sf::Text loadingText("Ladowanie gry...", font, 40);
+    loadingText.setFillColor(sf::Color::White);
+    loadingText.setPosition(
+        window.getSize().x / 2.f - loadingText.getLocalBounds().width / 2.f,
+        window.getSize().y / 2.f - loadingText.getLocalBounds().height / 2.f
+    );
+    window.draw(loadingText);
+    window.display();
 }
