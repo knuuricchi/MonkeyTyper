@@ -6,7 +6,6 @@
 #include <string>
 #include "globals.hpp"
 
-// Deklaracje funkcji obsługujących menu
 void initializeMainMenu(std::vector<sf::Text>& mainMenuTexts, sf::Font& font, int& selectedMainOption);
 void handleMainMenuInput(sf::RenderWindow& window, MenuState& currentMenu, std::vector<sf::Text>& mainMenuTexts, int& selectedMainOption);
 void drawMainMenu(sf::RenderWindow& window, const sf::Text& title, const std::vector<sf::Text>& mainMenuTexts);

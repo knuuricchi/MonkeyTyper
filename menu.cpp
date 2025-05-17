@@ -3,7 +3,6 @@
 #include "globals.hpp"
 #include <iostream>
 #include "game.hpp"
-#include "menu.hpp"
 
 void initializeMainMenu(std::vector<sf::Text>& mainMenuTexts, sf::Font& font, int& selectedMainOption) {
     for (size_t i = 0; i < mainMenuOptions.size(); ++i) {
@@ -126,7 +125,7 @@ void handleGameSettingsMenuInput(sf::RenderWindow& window, MenuState& currentMen
                     currentMenu = MenuState::MAIN_MENU;
                 } else if (selectedGameSettingsOption == 1) {
                     currentSpeedIndex = (currentSpeedIndex + 1) % speedOptions.size();
-                    gameSettingsOptions[1] = "Szybkosc slow: " + speedOptions[currentSpeedIndex];
+                    gameSettingsOptions[1] = "Szybkosc: " + speedOptions[currentSpeedIndex];
                     gameSettingsOptions[4] = "Preset: Custom";
                 } else if (selectedGameSettingsOption == 2) {
                     currentFrequencyIndex = (currentFrequencyIndex + 1) % frequencyOptions.size();
@@ -135,7 +134,7 @@ void handleGameSettingsMenuInput(sf::RenderWindow& window, MenuState& currentMen
                 } else if (selectedGameSettingsOption == 3) {
                     currentWordSizeIndex = (currentWordSizeIndex + 1) % wordSizeOptions.size();
                     wordSize = wordSizeOptions[currentWordSizeIndex];
-                    gameSettingsOptions[3] = "Rozmiar slow: " + std::to_string(wordSize);
+                    gameSettingsOptions[3] = "Rozmiar: " + std::to_string(wordSize);
                     gameSettingsOptions[4] = "Preset: Custom";
                 } else if (selectedGameSettingsOption == 4) {
                     currentPresetIndex = (currentPresetIndex + 1) % presets.size();
@@ -158,9 +157,9 @@ void handleGameSettingsMenuInput(sf::RenderWindow& window, MenuState& currentMen
                         currentWordSizeIndex = 0;
                     }
                     wordSize = wordSizeOptions[currentWordSizeIndex];
-                    gameSettingsOptions[1] = "Szybkosc slow: " + speedOptions[currentSpeedIndex];
+                    gameSettingsOptions[1] = "Szybkosc: " + speedOptions[currentSpeedIndex];
                     gameSettingsOptions[2] = "Czestotliwosc: " + frequencyOptions[currentFrequencyIndex];
-                    gameSettingsOptions[3] = "Rozmiar slow: " + std::to_string(wordSize);
+                    gameSettingsOptions[3] = "Rozmiar: " + std::to_string(wordSize);
                 } else if (selectedGameSettingsOption == 5) {
                     currentMenu = MenuState::MAIN_MENU;
                 }

@@ -9,11 +9,11 @@
 void runGame(sf::RenderWindow& window, const std::string& speedSetting, const std::string& frequencySetting) {
     activeWords.clear();
     currentInput = "";
+    bool toReset = false;
     score = 0;
     lobbyMusic.stop();
     bool countdownFinished = false;
 
-    // Ustawienie prędkości słów w zależności od wybranych ustawień
     if (speedSetting == "Slow") wordSpeed = 70.f;
     else if (speedSetting == "Normal") wordSpeed = 85.f;
     else if (speedSetting == "Fast") wordSpeed = 135.f;
@@ -25,8 +25,21 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
     else if (frequencySetting == "High") spawnChance = 3.1f;
     else if (frequencySetting == "MONKEY TYPE-LIKE!!!") spawnChance = 5.5f;
 
-    // Odliczanie przed rozpoczęciem gry
     for (int i = 3; i > 0; --i) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F1) {
+                toReset = true;
+                break;
+            }
+        }
+        if (toReset) {
+            gameMusic.stop();
+            runGame(window, speedSetting, frequencySetting);
+            return;
+        }
         if (countdownSound.getStatus() != sf::Sound::Playing)
             countdownSound.play();
         window.clear();
@@ -45,7 +58,6 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
     sf::Clock gameTimer;
     const int gameDuration = 60;
 
-    // Strefy zmiany koloru słów (zielona, żółta, czerwona)
     float layerWidth = window.getSize().x / 3.0f;
     float greenZoneEnd = layerWidth;
     float yellowZoneEnd = 2 * layerWidth;
@@ -59,6 +71,9 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
                 gameMusic.stop();
                 lobbyMusic.play();
                 return;
+            }
+            if (event.key.code == sf::Keyboard::F1) {
+                toReset = true;
             }
             if (event.type == sf::Event::TextEntered) {
                 if (event.text.unicode == '\b' && !currentInput.empty())
@@ -80,9 +95,13 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
                     currentInput += static_cast<char>(event.text.unicode);
             }
         }
+        if (toReset) {
+            gameMusic.stop();
+            runGame(window, speedSetting, frequencySetting);
+            return;
+        }
 
         float deltaTime = gameClock.restart().asSeconds();
-        // Aktualizacja stref kolorów
         layerWidth = window.getSize().x / 3.0f;
         greenZoneEnd = layerWidth;
         yellowZoneEnd = 2 * layerWidth;
@@ -105,7 +124,6 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
             }
         }
 
-        // Spawn słów, o ile odliczanie się zakończyło
         if (countdownFinished && rand() % 100 < spawnChance)
             spawnWord(font, window);
 
@@ -117,14 +135,12 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
             return;
         }
 
-        // Rysowanie interfejsu gry
         window.clear();
         sf::RectangleShape headerLine(sf::Vector2f(static_cast<float>(window.getSize().x), 2.f));
         headerLine.setPosition(0, 78.f);
         headerLine.setFillColor(sf::Color::White);
         window.draw(headerLine);
 
-        // Input box
         float inputBoxWidth = window.getSize().x * 0.3f;
         float inputBoxHeight = inputBoxWidth / 10.f;
         float inputBoxX = window.getSize().x - inputBoxWidth - 20.f;
@@ -140,7 +156,6 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
         window.draw(inputBox);
         window.draw(inputText);
 
-        // Nagłówki
         sf::Text settingsText("Szybkosc: " + speedSetting, font, 20);
         settingsText.setPosition(10.f, 10.f);
         settingsText.setFillColor(sf::Color::White);
@@ -193,7 +208,6 @@ void spawnWord(const sf::Font& font, const sf::RenderWindow& window) {
         } while (std::abs(randomY - bottomLineY) < wordSize);
         word.setPosition(0, static_cast<float>(randomY));
 
-        // Sprawdzenie kolizji z istniejącymi słowami
         bool overlaps = false;
         for (const auto& activeWord : activeWords) {
             if (std::abs(activeWord.getPosition().y - word.getPosition().y) < wordSize) {
@@ -222,6 +236,19 @@ void loadScoreboard(const std::string& filename) {
     file.close();
 }
 
+void filterScoreboard(bool ascending) {
+    if (ascending) {
+        std::sort(scoreboard.begin(), scoreboard.end(), [](const ScoreEntry& a, const ScoreEntry& b) {
+            return a.score < b.score;
+        });
+    } else {
+        std::sort(scoreboard.begin(), scoreboard.end(), [](const ScoreEntry& a, const ScoreEntry& b) {
+            return a.score > b.score;
+        });
+    }
+}
+
+
 void saveScoreboard(const std::string& filename) {
     std::ofstream file(filename, std::ios::app); // Dopisywanie do pliku
     if (!file.is_open()) return;
@@ -237,20 +264,16 @@ auto showPostGameMenu(sf::RenderWindow& window) -> void {
 
     scoreboard.push_back({"Local", score});
 
-    // Sortowanie scoreboardu malejąco (najwyższy wynik na górze)
     std::sort(scoreboard.begin(), scoreboard.end(), [](const ScoreEntry& a, const ScoreEntry& b) {
         return b.score > a.score;
     });
 
-    // Zapis wyników do pliku
     saveScoreboard("scoreboard.txt");
 
-    // Przygotowanie napisu z tytułem
     sf::Text title("Lokalne wyniki", font, 50);
     title.setPosition(200.f, 50.f);
-    title.setColor(sf::Color::Cyan);
+    title.setFillColor(sf::Color::Cyan);
 
-    // Przygotowanie tekstów z wynikami
     std::vector<sf::Text> scoreTexts;
     for (size_t i = 0; i < scoreboard.size(); ++i) {
         sf::Text scoreText(
@@ -262,29 +285,51 @@ auto showPostGameMenu(sf::RenderWindow& window) -> void {
         scoreTexts.push_back(scoreText);
     }
 
-    // Opcje menu końcowego
-    sf::Text optionNext("Nastepna gra", font, 30);
-    optionNext.setPosition(200.f, 500.f);
-    sf::Text optionMain("Powrot do menu glownego", font, 30);
+    int selectedOption = 0;
+    const int optionCount = 2;
+    bool enterPressed = false;
+    bool ascending = false;
+
+    sf::Text optionFilter("Filtruj wyniki", font, 30);
+    optionFilter.setPosition(200.f, 500.f);
+
+    sf::Text optionMain("Menu", font, 30);
     optionMain.setPosition(200.f, 550.f);
 
-    int selectedOption = 0;
-    bool enterPressed = false;
-
-    // Pętla obsługi menu po grze
     while (window.isOpen() && !enterPressed) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
+
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Down) {
-                    selectedOption = 1 - selectedOption; // Przełączanie opcji
+                if (event.key.code == sf::Keyboard::Up) {
+                    selectedOption = (selectedOption + optionCount - 1) % optionCount;
+                    menuMoveSound.play();
+                }
+                if (event.key.code == sf::Keyboard::Down) {
+                    selectedOption = (selectedOption + 1) % optionCount;
                     menuMoveSound.play();
                 }
                 if (event.key.code == sf::Keyboard::Enter) {
-                    enterPressed = true;
-                    menuSelectSound.play();
+                    if (selectedOption == 0) { // Filtruj wyniki
+                        ascending = !ascending;
+                        filterScoreboard(ascending);
+                        scoreTexts.clear();
+                        for (size_t i = 0; i < scoreboard.size(); ++i) {
+                            sf::Text scoreText(
+                                std::to_string(i + 1) + ". " + scoreboard[i].playerName + ": " + std::to_string(scoreboard[i].score),
+                                font, 30
+                            );
+                            scoreText.setPosition(200.f, 150.f + i * 40.f);
+                            scoreText.setFillColor(sf::Color::White);
+                            scoreTexts.push_back(scoreText);
+                        }
+                        menuSelectSound.play();
+                    } else {
+                        enterPressed = true;
+                        menuSelectSound.play();
+                    }
                 }
                 if (event.key.code == sf::Keyboard::Escape) {
                     window.close();
@@ -292,15 +337,18 @@ auto showPostGameMenu(sf::RenderWindow& window) -> void {
             }
         }
 
-        optionNext.setFillColor(selectedOption == 0 ? sf::Color::Yellow : sf::Color::White);
+        optionFilter.setFillColor(selectedOption == 0 ? sf::Color::Yellow : sf::Color::White);
         optionMain.setFillColor(selectedOption == 1 ? sf::Color::Yellow : sf::Color::White);
 
         window.clear();
         window.draw(title);
         for (const auto& scoreText : scoreTexts)
             window.draw(scoreText);
-        window.draw(optionNext);
+        window.draw(optionFilter);
         window.draw(optionMain);
         window.display();
     }
+
+    postGameMusic.stop();
+    lobbyMusic.play();
 }

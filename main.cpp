@@ -5,7 +5,6 @@
 #include <thread>
 
 int main() {
-    // Inicjalizacja okna
     sf::RenderWindow window(sf::VideoMode{900u, 660u}, "Monkey Typer");
     window.setFramerateLimit(60);
 
@@ -21,20 +20,16 @@ int main() {
 
     lobbyMusic.play();
 
-    // Inicjalizacja stanu menu
     MenuState currentMenu = MenuState::MAIN_MENU;
 
-    // Tekst tytułowy
     sf::Text title("Monkey Typer", font, 60);
     title.setPosition(200.f, 50.f);
     title.setFillColor(sf::Color::Cyan);
 
-    // Inicjalizacja tekstów menu głównego
     std::vector<sf::Text> mainMenuTexts;
     int selectedMainOption = 0;
     initializeMainMenu(mainMenuTexts, font, selectedMainOption);
 
-    // Główna pętla programu
     while (window.isOpen()) {
         if (currentMenu == MenuState::MAIN_MENU) {
             handleMainMenuInput(window, currentMenu, mainMenuTexts, selectedMainOption);

@@ -1,4 +1,28 @@
 #include "globals.hpp"
+#include <fstream>
+
+void saveGame() {
+    std::fstream file("savegame.txt");
+    if (file.is_open()) {
+        file << score << std::endl;
+        file << currentInput << std::endl;
+        file << wordSpeed << std::endl;
+        file << spawnChance << std::endl;
+        file.close();
+    }
+}
+
+void loadGame() {
+    std::fstream file("savegame.txt");
+    if (file.is_open()) {
+        file >> score;
+        file.ignore();
+        std::getline(file, currentInput);
+        file >> wordSpeed;
+        file >> spawnChance;
+        file.close();
+    }
+}
 
 // Słowa do rozgrywki
 sf::Clock colorChangeClock;
@@ -12,7 +36,6 @@ float spawnChance = 0.5f;
 
 sf::Clock gameClock;
 
-// Czcionki
 sf::Font font;
 std::vector<std::string> fontOptions = {
     "assets/fonts/BrokenConsole.ttf",
@@ -28,7 +51,6 @@ std::vector<std::string> fontNames = {
 };
 int currentFontIndex = 0;
 
-// Muzyka i dźwięki
 sf::Music gameMusic;
 sf::Music lobbyMusic;
 sf::Music postGameMusic;
@@ -42,7 +64,6 @@ std::string postGameMusicFiles = "assets/sounds/post_lobby.wav";
 
 int audioVolume = 5;
 
-// Efekty dźwiękowe
 sf::SoundBuffer menuMoveBuffer;
 sf::Sound menuMoveSound;
 sf::SoundBuffer menuSelectBuffer;
@@ -50,18 +71,14 @@ sf::Sound menuSelectSound;
 sf::SoundBuffer countdownBuffer;
 sf::Sound countdownSound;
 
-// Rozmiar wyświetlanych słów
 int wordSize = 30;
 std::vector<int> wordSizeOptions = {20, 30, 40, 50};
 int currentWordSizeIndex = 1;
 
-// Wyniki rozgrywki
 std::vector<ScoreEntry> scoreboard;
 
-// Opcje menu, ustawień, rozgrywki oraz zmienne pomocnicze w menu
 std::vector<std::string> mainMenuOptions = {"GRAJ", "USTAWIENIA", "WYJSCIE"};
 
-// Dla ustawień ogólnych
 std::vector<std::string> settingsOptions = {
     "Rozdzielczosc: 900x660",
     "FPS: 60",
@@ -74,12 +91,11 @@ std::vector<int> fpsOptions = {30, 60, 120};
 int currentResolutionIndex = 0;
 int currentFpsIndex = 1;
 
-// Dla ustawień gry
 std::vector<std::string> gameSettingsOptions = {
     "Rozpocznij",
-    "Szybkosc slow: Normal",
+    "Szybkosc: Normal",
     "Czestotliwosc: Normal",
-    "Rozmiar slow: 30",
+    "Rozmiar: 30",
     "Preset: Medium",
     "Powrot"
 };
