@@ -12,6 +12,7 @@ int main() {
     loadIcon(window, "assets/images/icon.png");
     loadWordsFromFile("Words.txt");
     loadAudioEffects();
+    loadPostGameMuisc(postGameMusic, postGameMusicFiles, audioVolume);
     loadMusic(lobbyMusic, lobbyMusicFiles, audioVolume);
     loadPostGameMuisc(postGameMusic, postGameMusicFiles, audioVolume);
 

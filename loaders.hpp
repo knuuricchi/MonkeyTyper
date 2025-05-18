@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <string>
-#include <thread>
 
 void loadIcon(sf::RenderWindow& window, const std::string& filename);
 void loadFont(const std::string& filename);

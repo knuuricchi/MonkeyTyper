@@ -49,6 +49,11 @@ struct ScoreEntry {
     std::string playerName;
     int score;
 };
+
+extern std::vector<int> timeOptions;
+extern int currentTimeIndex;
+extern int gameTime;
+
 extern std::vector<ScoreEntry> scoreboard;
 
 extern std::vector<std::string> mainMenuOptions;

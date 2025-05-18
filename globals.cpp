@@ -24,7 +24,6 @@ void loadGame() {
     }
 }
 
-// Słowa do rozgrywki
 sf::Clock colorChangeClock;
 int currentColorIndex = 0;
 std::vector<std::string> words;
@@ -96,6 +95,7 @@ std::vector<std::string> gameSettingsOptions = {
     "Szybkosc: Normal",
     "Czestotliwosc: Normal",
     "Rozmiar: 30",
+    "Czas: 30s",
     "Preset: Medium",
     "Powrot"
 };
@@ -107,3 +107,7 @@ int currentFrequencyIndex = 1;
 int currentPresetIndex = 1;
 std::string gameSpeed = "Normal";
 std::string gameFrequency = "Normal";
+
+std::vector<int> timeOptions = {10, 20, 30, 40, 50, 60};
+int currentTimeIndex = 0;
+int gameTime = timeOptions[currentTimeIndex];

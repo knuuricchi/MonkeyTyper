@@ -121,46 +121,57 @@ void handleGameSettingsMenuInput(sf::RenderWindow& window, MenuState& currentMen
                 if (selectedGameSettingsOption == 0) {
                     gameSpeed = speedOptions[currentSpeedIndex];
                     gameFrequency = frequencyOptions[currentFrequencyIndex];
-                    runGame(window, gameSpeed, gameFrequency);
+                    runGame(window, gameSpeed, gameFrequency, gameTime);
                     currentMenu = MenuState::MAIN_MENU;
                 } else if (selectedGameSettingsOption == 1) {
                     currentSpeedIndex = (currentSpeedIndex + 1) % speedOptions.size();
                     gameSettingsOptions[1] = "Szybkosc: " + speedOptions[currentSpeedIndex];
-                    gameSettingsOptions[4] = "Preset: Custom";
+                    gameSettingsOptions[5] = "Preset: Custom";
                 } else if (selectedGameSettingsOption == 2) {
                     currentFrequencyIndex = (currentFrequencyIndex + 1) % frequencyOptions.size();
                     gameSettingsOptions[2] = "Czestotliwosc: " + frequencyOptions[currentFrequencyIndex];
-                    gameSettingsOptions[4] = "Preset: Custom";
+                    gameSettingsOptions[5] = "Preset: Custom";
                 } else if (selectedGameSettingsOption == 3) {
                     currentWordSizeIndex = (currentWordSizeIndex + 1) % wordSizeOptions.size();
                     wordSize = wordSizeOptions[currentWordSizeIndex];
                     gameSettingsOptions[3] = "Rozmiar: " + std::to_string(wordSize);
-                    gameSettingsOptions[4] = "Preset: Custom";
+                    gameSettingsOptions[5] = "Preset: Custom";
                 } else if (selectedGameSettingsOption == 4) {
+                    currentTimeIndex = (currentTimeIndex + 1) % timeOptions.size();
+                    gameTime = timeOptions[currentTimeIndex];
+                    gameSettingsOptions[4] = "Czas: " + std::to_string(gameTime) + "s";
+                    gameSettingsOptions[5] = "Preset: Custom";
+                } else if (selectedGameSettingsOption == 5) {
                     currentPresetIndex = (currentPresetIndex + 1) % presets.size();
-                    gameSettingsOptions[4] = "Preset: " + presets[currentPresetIndex];
+                    gameSettingsOptions[5] = "Preset: " + presets[currentPresetIndex];
                     if (currentPresetIndex == 0) {
                         currentSpeedIndex = 0;
                         currentFrequencyIndex = 0;
                         currentWordSizeIndex = 3;
+                        currentTimeIndex = 1;
                     } else if (currentPresetIndex == 1) {
                         currentSpeedIndex = 1;
                         currentFrequencyIndex = 1;
                         currentWordSizeIndex = 2;
+                        currentTimeIndex = 2;
                     } else if (currentPresetIndex == 2) {
                         currentSpeedIndex = 2;
                         currentFrequencyIndex = 2;
                         currentWordSizeIndex = 1;
+                        currentTimeIndex = 0;
                     } else if (currentPresetIndex == 3) {
                         currentSpeedIndex = 4;
                         currentFrequencyIndex = 3;
                         currentWordSizeIndex = 0;
+                        currentTimeIndex = 3;
                     }
                     wordSize = wordSizeOptions[currentWordSizeIndex];
+                    gameTime = timeOptions[currentTimeIndex];
                     gameSettingsOptions[1] = "Szybkosc: " + speedOptions[currentSpeedIndex];
                     gameSettingsOptions[2] = "Czestotliwosc: " + frequencyOptions[currentFrequencyIndex];
                     gameSettingsOptions[3] = "Rozmiar: " + std::to_string(wordSize);
-                } else if (selectedGameSettingsOption == 5) {
+                    gameSettingsOptions[4] = "Czas: " + std::to_string(gameTime) + "s";
+                } else if (selectedGameSettingsOption == 6) {
                     currentMenu = MenuState::MAIN_MENU;
                 }
             }

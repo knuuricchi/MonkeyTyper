@@ -4,7 +4,7 @@
 #include <string>
 
 void spawnWord(const sf::Font& font, const sf::RenderWindow& window);
-void runGame(sf::RenderWindow& window, const std::string& speedSetting, const std::string& frequencySetting);
+void runGame(sf::RenderWindow& window, std::string speedSetting, std::string frequencySetting, int duration);
 void showPostGameMenu(sf::RenderWindow& window);
 void playRandomGameMusic(int volume);
 

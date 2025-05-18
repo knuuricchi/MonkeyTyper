@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cstdlib>
 
-void runGame(sf::RenderWindow& window, const std::string& speedSetting, const std::string& frequencySetting) {
+void runGame(sf::RenderWindow& window, std::string speedSetting, std::string frequencySetting, int duration) {
     activeWords.clear();
     currentInput = "";
     bool toReset = false;
@@ -37,7 +37,7 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
         }
         if (toReset) {
             gameMusic.stop();
-            runGame(window, speedSetting, frequencySetting);
+            runGame(window, speedSetting, frequencySetting, duration);
             return;
         }
         if (countdownSound.getStatus() != sf::Sound::Playing)
@@ -56,7 +56,7 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
     playRandomGameMusic(audioVolume);
     gameClock.restart();
     sf::Clock gameTimer;
-    const int gameDuration = 60;
+    int gameDuration = duration;
 
     float layerWidth = window.getSize().x / 3.0f;
     float greenZoneEnd = layerWidth;
@@ -97,7 +97,7 @@ void runGame(sf::RenderWindow& window, const std::string& speedSetting, const st
         }
         if (toReset) {
             gameMusic.stop();
-            runGame(window, speedSetting, frequencySetting);
+            runGame(window, speedSetting, frequencySetting, duration);
             return;
         }
 
@@ -199,8 +199,8 @@ void playRandomGameMusic(int audioVolume) {
 void spawnWord(const sf::Font& font, const sf::RenderWindow& window) {
     if (!words.empty()) {
         sf::Text word(words[rand() % words.size()], font, wordSize);
-        int topLineY = 60; // Górna linia
-        int bottomLineY = window.getSize().y - 50; // Dolna linia
+        int topLineY = 60;
+        int bottomLineY = window.getSize().y - 50;
         int maxY = window.getSize().y - wordSize - 50;
         int randomY;
         do {
@@ -250,7 +250,7 @@ void filterScoreboard(bool ascending) {
 
 
 void saveScoreboard(const std::string& filename) {
-    std::ofstream file(filename, std::ios::app); // Dopisywanie do pliku
+    std::ofstream file(filename, std::ios::app);
     if (!file.is_open()) return;
 
     const auto& lastEntry = scoreboard.back();
@@ -312,7 +312,7 @@ auto showPostGameMenu(sf::RenderWindow& window) -> void {
                     menuMoveSound.play();
                 }
                 if (event.key.code == sf::Keyboard::Enter) {
-                    if (selectedOption == 0) { // Filtruj wyniki
+                    if (selectedOption == 0) {
                         ascending = !ascending;
                         filterScoreboard(ascending);
                         scoreTexts.clear();
